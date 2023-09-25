@@ -5,16 +5,8 @@ import (
 	"io"
 )
 
-type inputFormat string
-
-const (
-	inputJSON inputFormat = "json"
-	inputYAML inputFormat = "yaml"
-)
-
 type formatConfig struct {
 	w            io.Writer
-	format       inputFormat
 	packageName  string
 	variableName string
 	tjPrefix     string

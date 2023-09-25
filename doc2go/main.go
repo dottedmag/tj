@@ -6,19 +6,17 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ridge/must"
+	"github.com/dottedmag/must"
 	"github.com/spf13/pflag"
-	"gopkg.in/yaml.v2"
 )
 
 func args() formatConfig {
-	var format, packageName, variableName, tjPrefix, tjPackage string
+	var packageName, variableName, tjPrefix, tjPackage string
 
-	pflag.StringVar(&format, "format", "json", "Input format to use: [json | yaml]")
 	pflag.StringVar(&packageName, "package", "", "Generate package declaration (requires --variable)")
 	pflag.StringVar(&variableName, "variable", "", "Generate variable declaration")
 	pflag.StringVar(&tjPrefix, "tj-prefix", "tj", "Import prefix for to use for tj package")
-	pflag.StringVar(&tjPackage, "tj-package", "github.com/ridge/tj", "Import path for tj package")
+	pflag.StringVar(&tjPackage, "tj-package", "github.com/dottedmag/tj", "Import path for tj package")
 
 	pflag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [OPTION]... < INPUT.json > OUTPUT.go\n", os.Args[0])
@@ -33,7 +31,6 @@ func args() formatConfig {
 
 	return formatConfig{
 		w:            os.Stdout,
-		format:       inputFormat(format),
 		packageName:  packageName,
 		variableName: variableName,
 		tjPrefix:     tjPrefix,
@@ -44,17 +41,8 @@ func args() formatConfig {
 func main() {
 	cfg := args()
 
-	var val interface{}
-
-	switch cfg.format {
-	case inputJSON:
-		must.OK(json.NewDecoder(os.Stdin).Decode(&val))
-	case inputYAML:
-		must.OK(yaml.NewDecoder(os.Stdin).Decode(&val))
-		val = keysToStrings(val)
-	default:
-		panic(fmt.Sprintf("unsupported format %s", cfg.format))
-	}
+	var val any
+	must.OK(json.NewDecoder(os.Stdin).Decode(&val))
 
 	formatHeader(cfg)
 	format(cfg, val)

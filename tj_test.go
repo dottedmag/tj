@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/ridge/tj"
+	"github.com/dottedmag/tj"
 )
 
 func Example() {
