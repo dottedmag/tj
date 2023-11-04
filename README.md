@@ -13,7 +13,7 @@ Use `tj` to produce well-formed schemaless JSON:
         },
     })
 
-`tj/json2go` tool produces `tj` trees from existing JSON or YAML files.
+`tj/json2go` tool produces `tj` trees from existing JSON files.
 
 ## Why whould I need that?
 
